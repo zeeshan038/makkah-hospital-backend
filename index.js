@@ -7,7 +7,7 @@ const index = require('./routes/index');
 const app = express();
 
 app.use(cors({
-  origin: "https://makkah-hospital-frontend-1.vercel.app/", 
+  origin: "https://makkah-hospital-frontend-1.vercel.app", 
   credentials: true
 }));
 app.use(express.json());
