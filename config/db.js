@@ -5,10 +5,8 @@ dotenv.config();
 
 module.exports = connectDb = async () => {
   try {
-    await mongoose.connect(process.env.MONGO_URL, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-      serverSelectionTimeoutMS: 20000,
+    await mongoose.connect(process.env.MONGO_URL,{
+      dbName: "makkah-hospital",
     });
     console.log("Connection Created");
   } catch (error) {

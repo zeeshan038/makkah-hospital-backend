@@ -21,9 +21,17 @@ module.exports.signupSchema = (payload) => {
       "string.max": "Email cannot exceed 50 characters.",
       "any.required": "Email is required.",
     }),
-    role: Joi.string().valid("admin", "user").default("user").messages({
+    role: Joi.string().valid("admin", "pharmacy", "doctor", "xray", "lab").default("user").messages({
       "string.base": "Role must be a string.",
-      "any.only": "Role must be one of [admin, user].",
+      "any.only": "Role must be one of [admin, pharmacy, doctor, xray, lab].",
+    }),
+    specialization: Joi.string().when("role", {
+      is: "doctor",
+      then: Joi.required(),
+      otherwise: Joi.optional(),
+    }).messages({
+      "string.base": "Specialization must be a string.",
+      "any.required": "Specialization is required for doctors.",
     }),
     createdAt: Joi.date().optional(),
   }).messages({

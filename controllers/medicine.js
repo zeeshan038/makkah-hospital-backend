@@ -1,4 +1,6 @@
-const mongoose = require("mongoose");
+const fs = require('fs');
+const csvParse = require('csv-parse');
+const XLSX = require('xlsx');
 //Model
 const medicine = require("../models/medicine");
 const Batch = require("../models/batch");
@@ -88,7 +90,98 @@ module.exports.addMedicine = async (req, res) => {
   }
 };
 
+/**
+ * @description Add medicine
+ * @route POST api/medicine/add
+ * @access Private
+ */
+module.exports.bulkUploadMedicines = async (req, res) => {
+  try {
+    const file = req.file;
+    console.log("Received file:", file);
+    if (!file) return res.status(400).json({ msg: "No file uploaded" });
 
+    let rows = [];
+    if (file.mimetype === 'text/csv') {
+      // Parse CSV from buffer (memoryStorage)
+      rows = await new Promise((resolve, reject) => {
+        csvParse(file.buffer, { columns: true, trim: true }, (err, output) => {
+          if (err) reject(err);
+          else resolve(output);
+        });
+      });
+    } else if (
+      file.mimetype === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
+      file.mimetype === 'application/vnd.ms-excel'
+    ) {
+      // Parse Excel from buffer (memoryStorage)
+      const workbook = XLSX.read(file.buffer, { type: "buffer" });
+      const sheetName = workbook.SheetNames[0];
+      rows = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName]);
+    } else {
+      return res.status(400).json({ msg: "Unsupported file type" });
+    }
+
+    // Process each row
+    for (const row of rows) {
+      const {
+        name,
+        description,
+        brand,
+        price,
+        category,
+        manufacturer,
+        batchNumber,
+        purchasePrice,
+        quantity,
+        expiryDate,
+      } = row;
+
+      // Your existing add/update logic here (reuse from addMedicine)
+      let med = await medicine.findOne({ name, brand });
+      if (!med) {
+        med = await medicine.create({
+          name,
+          description,
+          brand,
+          price,
+          category,
+          manufacturer,
+        });
+      }
+
+      let existingBatch = await Batch.findOne({
+        medicineId: med._id,
+        batchNumber,
+        purchasePrice,
+        expiryDate,
+      });
+
+      if (existingBatch) {
+        existingBatch.quantity += Number(quantity);
+        existingBatch.pricePerUnit = existingBatch.purchasePrice / existingBatch.quantity;
+        await existingBatch.save();
+      } else {
+        const pricePerUnit = purchasePrice / quantity;
+        await Batch.create({
+          medicineId: med._id,
+          batchNumber,
+          purchasePrice,
+          quantity,
+          expiryDate,
+          pricePerUnit,
+        });
+      }
+    } 
+
+    console.log("rows", rows)
+
+    return res.status(200).json({ status: true, msg: "Bulk upload successful" });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ status: false, msg: err.message });
+  }
+};
 
 /**
  * @description Get all medicines

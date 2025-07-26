@@ -5,6 +5,7 @@ const multer = require("multer");
 // Utils
 const { uploadFile } = require("../utils/cloudnary");
 const { sanitizeFileName } = require("../utils/Methods");
+const { bulkUploadMedicines } = require("../controllers/medicine");
 
 // Multer Config
 const storage = multer.memoryStorage();
@@ -12,6 +13,7 @@ const uploadImage = multer({
   storage, 
   fileFilter: imageFilter 
 });
+const uploadFileMulter = multer({ storage });
 
 // Image Filter Function
 function imageFilter(req, file, cb) {
@@ -58,5 +60,8 @@ router.post("/image", uploadImage.single("image"), async (req, res) => {
     return res.status(500).json({ error: "Failed to upload image" });
   }
 });
+
+router.post("/bulk-medicine", uploadFileMulter.single("file"), bulkUploadMedicines);
+
 
 module.exports = router;

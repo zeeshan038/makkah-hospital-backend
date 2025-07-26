@@ -13,6 +13,11 @@ const patientSchema = new mongoose.Schema({
   phone: {
     type: String,
   },
+  doctor: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User", 
+    default: null,
+  },
   sales: [
     {
       type: mongoose.Schema.Types.ObjectId,
@@ -25,4 +30,4 @@ const patientSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model("Patient", patientSchema);
+module.exports = mongoose.model("Patient", patientSchema);1

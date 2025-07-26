@@ -12,7 +12,7 @@ module.exports.generateToken = (id) => {
   return jwt.sign({ id }, process.env.SECRET);
 };
 
-
+ 
 module.exports.sanitizeFileName = (name) => {
   const parts = name.split(".");
   // Sanitize the filename part (replace invalid characters with underscores)

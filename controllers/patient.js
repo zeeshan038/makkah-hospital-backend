@@ -1,7 +1,5 @@
 const patient = require("../models/patient");
 
-
-
 /**
  * @description get all patients
  * @route POST api/medicine/all-patients

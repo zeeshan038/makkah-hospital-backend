@@ -184,7 +184,6 @@ module.exports.sellMed = async (req, res) => {
   }
 };
 
-
 /**
  * @description get patient sales
  * @route GET api/sale/patient/:mitId
@@ -221,7 +220,6 @@ module.exports.getSalesByPatientId = async (req, res) => {
     return res.status(500).json({ msg: "Server error", error: err.message });
   }
 };
-
 
 /**
  * @description record
