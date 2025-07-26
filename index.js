@@ -8,7 +8,7 @@ const index = require('./routes/index');
 const app = express();
 
 app.use(cors({
-  origin: "http://localhost:5173", 
+  origin: "https://makkah-hospital-frontend-1.vercel.app", 
   credentials: true
 }));
 app.use(express.json());
@@ -28,7 +28,7 @@ const server = app.listen(port, () => {
 // Initialize Socket.IO
 const io = socketIo(server, {
   cors: {
-    origin: "http://localhost:5173",
+    origin: "https://makkah-hospital-frontend-1.vercel.app",
     credentials: true
   }
 });
