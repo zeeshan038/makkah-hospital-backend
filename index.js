@@ -8,9 +8,14 @@ const index = require('./routes/index');
 const app = express();
 
 app.use(cors({
-  origin: "https://makkah-hospital-frontend-1.vercel.app", 
+  origin: [
+    "https://makkah-hospital-frontend-1.vercel.app",
+    "https://mmc-super-admin.vercel.app"
+  ],
   credentials: true
 }));
+app.use(express.json());
+
 app.use(express.json());
 app.use(cors());
 
@@ -28,7 +33,10 @@ const server = app.listen(port, () => {
 // Initialize Socket.IO
 const io = socketIo(server, {
   cors: {
-    origin: "https://makkah-hospital-frontend-1.vercel.app",
+    origin: [
+      "https://makkah-hospital-frontend-1.vercel.app",
+      "https://mmc-super-admin.vercel.app"
+    ],
     credentials: true
   }
 });
