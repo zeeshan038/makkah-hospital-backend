@@ -65,3 +65,19 @@ module.exports.getPatientById = async (req, res) => {
         res.status(500).json({ error: 'Failed to fetch patient' });
     }
 };
+
+
+/**
+ * @description tottal patient numbers
+ * @route POST api/medicine/patientcount
+ * @access Private
+ */
+module.exports.getTotalPatientCount = async (req, res) => {
+    try {
+        const totalPatients = await patient.countDocuments();
+        res.status(200).json({ status: true, msg: "Total patients count fetched successfully.", totalPatients });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Failed to fetch total patient count' });
+    }
+};  
