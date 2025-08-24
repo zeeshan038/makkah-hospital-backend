@@ -65,14 +65,18 @@ module.exports.searchMedicineByNameAndBrand = async (req, res) => {
  * @access Private
  */
 module.exports.sellMed = async (req, res) => {
-  const { medicines, MITId, patientName, discount = 0 } = req.body;
-  
-
+  const { medicines, MITId, patientName, discount = 0, isSehatCard = false, sehatCardNumber, sehatCardName } = req.body;
   if (!Array.isArray(medicines) || medicines.length === 0) {
     return res.status(400).json({ msg: "No medicines provided." });
   }
 
   try {
+    // Validate sehat card details if flag is true
+    if (isSehatCard) {
+      if (!sehatCardNumber || !sehatCardName) {
+        return res.status(400).json({ msg: "Sehat Card number and name are required when Sehat Card is selected." });
+      }
+    }
     let actualPatientId = MITId;
     let patientDoc;
 
@@ -117,7 +121,9 @@ module.exports.sellMed = async (req, res) => {
         const sellQty = Math.min(batchItem.quantity, qtyToSell);
         const unitPurchasePrice = batchItem.pricePerUnit || 0;
 
-        const discountedPricePerUnit = sellingPrice - (discount / 100) * sellingPrice;
+        // Decide the base selling price: use sehatPrice if sehat card selected and value exists
+        const baseUnitPrice = (isSehatCard && med.sehatPrice != null) ? med.sehatPrice : (sellingPrice ?? med.price);
+        const discountedPricePerUnit = baseUnitPrice - (discount / 100) * baseUnitPrice;
         const rawProfit = (discountedPricePerUnit - unitPurchasePrice) * sellQty;
         const profit = isNaN(rawProfit) ? 0 : rawProfit;
 
@@ -129,7 +135,7 @@ module.exports.sellMed = async (req, res) => {
           batchId: batchItem._id,
           quantitySold: sellQty,
           purchasePrice: unitPurchasePrice,
-          sellingPrice,
+          sellingPrice: baseUnitPrice,
           discountedSellingPrice: discountedPricePerUnit,
           profit,
           category: med.category,
@@ -159,6 +165,8 @@ module.exports.sellMed = async (req, res) => {
       discount,
       discountAmount,
       finalTotal,
+      isSehatCard: Boolean(isSehatCard),
+      ...(isSehatCard ? { sehatCardNumber, sehatCardName } : {}),
     });
 
     // Optional: Track sale in patient

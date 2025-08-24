@@ -23,7 +23,7 @@ const saleSchema = new mongoose.Schema({
   },
   discount: {
     type: Number,
-    default: 0, // as percentage (e.g., 10 for 10%)
+    default: 0,
   },
   discountAmount: {
     type: Number,
@@ -36,7 +36,10 @@ const saleSchema = new mongoose.Schema({
   totalProfit: {
     type: Number,
     required: true,
-  }
+  },
+  isSehatCard: { type: Boolean, default: false },
+  sehatCardNumber: { type: String },
+  sehatCardName: { type: String }
 }, { timestamps: true });
 
 module.exports = mongoose.model("Sale", saleSchema);

@@ -17,6 +17,10 @@ const medSchema = new mongoose.Schema({
     type: Number,
    
   },
+  sehatPrice: {
+    type: Number,
+    default: null,
+  },
   image: {
     type: String,
     

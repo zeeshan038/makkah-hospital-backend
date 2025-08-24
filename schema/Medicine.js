@@ -22,6 +22,10 @@ module.exports.medicineSchema = (payload) => {
       "number.min": "Price cannot be negative.",
       "any.required": "Price is required.",
     }),
+    sehatPrice: Joi.number().min(0).optional().messages({
+      "number.base": "Sehat price must be a number.",
+      "number.min": "Sehat price cannot be negative.",
+    }),
     image: Joi.string().required().messages({
       "string.base": "Image must be a string.",
       "string.empty": "Image cannot be empty.",
@@ -68,6 +72,10 @@ module.exports.updateMedSchema = (payload) => {
       "number.min": "Price cannot be negative.",
       "any.required": "Price is required.",
     }),
+    sehatPrice: Joi.number().min(0).optional().messages({
+      "number.base": "Sehat price must be a number.",
+      "number.min": "Sehat price cannot be negative.",
+    }),
     image: Joi.string().optional().messages({
       "string.base": "Image must be a string.",
       "string.empty": "Image cannot be empty.",
@@ -91,3 +99,4 @@ module.exports.updateMedSchema = (payload) => {
   const validationResult = schema.validate(payload);
   return validationResult;
 };
+

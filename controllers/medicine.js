@@ -21,6 +21,7 @@ module.exports.addMedicine = async (req, res) => {
     description,
     brand,
     price,
+    sehatPrice,
     category,
     manufacturer,
     batchNumber,
@@ -47,6 +48,7 @@ module.exports.addMedicine = async (req, res) => {
           description,
           brand,
           price,
+          sehatPrice: typeof sehatPrice === 'number' ? sehatPrice : undefined,
           category,
           manufacturer,
         });
@@ -129,6 +131,7 @@ module.exports.bulkUploadMedicines = async (req, res) => {
         description,
         brand,
         price,
+        sehatPrice,
         category,
         manufacturer,
         batchNumber,
@@ -145,6 +148,7 @@ module.exports.bulkUploadMedicines = async (req, res) => {
           description,
           brand,
           price,
+          sehatPrice: typeof sehatPrice === 'number' ? sehatPrice : undefined,
           category,
           manufacturer,
         });
