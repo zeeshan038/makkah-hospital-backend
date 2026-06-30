@@ -10,11 +10,12 @@ const app = express();
 app.use(cors({
   origin: [
     "https://makkah-hospital-frontend-1.vercel.app",
+    "https://makkah-hospital-frontend.vercel.app",
     "https://mmc-super-admin.vercel.app",
     "http://localhost:5174"
   ],
   credentials: true
-}));
+}))
 app.use(express.json());
 
 
@@ -23,7 +24,6 @@ connectDb();
 // Routes
 app.use('/api', index);
 
-// Start server with HTTP and Socket.IO
 const port = process.env.PORT || 4000; 
 const server = app.listen(port, () => {
   console.log(`server is running on port ${port}`);
