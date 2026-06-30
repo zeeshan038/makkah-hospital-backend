@@ -56,7 +56,7 @@ module.exports.signup = async (req, res) => {
     });
   } catch (error) {
     console.log(error);
-    return res.status(500).json({ errors: error });
+    return res.status(500).json({ errors: error.message });
   }
 };
 

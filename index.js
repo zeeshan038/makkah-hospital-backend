@@ -10,14 +10,13 @@ const app = express();
 app.use(cors({
   origin: [
     "https://makkah-hospital-frontend-1.vercel.app",
-    "https://mmc-super-admin.vercel.app"
+    "https://mmc-super-admin.vercel.app",
+    "http://localhost:5174"
   ],
   credentials: true
 }));
 app.use(express.json());
 
-app.use(express.json());
-app.use(cors());
 
 connectDb();
 
@@ -35,7 +34,8 @@ const io = socketIo(server, {
   cors: {
     origin: [
       "https://makkah-hospital-frontend-1.vercel.app",
-      "https://mmc-super-admin.vercel.app"
+      "https://mmc-super-admin.vercel.app",
+      "http://localhost:5174"
     ],
     credentials: true
   }
